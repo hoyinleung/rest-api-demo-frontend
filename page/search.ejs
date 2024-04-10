@@ -1,0 +1,62 @@
+<%- include('header.ejs') %> 
+    <h1>文章搜尋頁</h1>
+
+    <form>
+        <input type="text" id="keyword" name="keyword" placeholder="在這輸入關鍵字">
+        <input type="submit" value="搜尋" >
+    </form>
+
+     <% if(data !=='N/A' && data.length >0) { %>
+        <h1>共<%=data.length%>個結果</h1>
+        <% data.forEach(article => { %>
+            <h3><a href="/post/<%=article._id%>" target="_blank"><%=article.title%></a> (瀏覽次數 : <%=article.views%>)</h3>
+        <% }) %>
+    <% } %>
+
+    <div id="searchResult"></div>
+
+    <script>
+        const searchKeyword = document.querySelector('#keyword')
+        const form = document.querySelector('form')
+        const searchResult = document.querySelector('#searchResult')
+
+        form.addEventListener('submit',(e)=>{
+            e.preventDefault()
+            fetchData()
+        })
+        
+        async function fetchData() {
+
+            const url = `http://localhost:3001/search?keyword=${searchKeyword.value}`
+            
+            console.log("🚀 ~ fetchData ~ url:", url)
+
+            try{
+            const res = await fetch(url)
+            const data = await res.json()
+            console.log(data)
+
+            if(data.length)
+            {
+                let newContent = `<p>搜尋沒有結果</p>`
+                data.forEach(result=>{
+                    console.log(result)
+                    newContent += `<a href="/post/${result._id}" target="_blank">${result.title}</a> (${result.views}次瀏覽)<br/><br/>`
+                })
+                searchResult.innerHTML=newContent
+            }
+            else   {
+                searchResult.innerHTML=`<p>搜尋沒有結果</p>`
+
+            }
+            }
+            catch(e){
+                console.log('Fetch error '+e)
+            }
+        }
+
+        /* const url = ';
+        fetchData(url); */
+
+    </script>
+<%- include('footer.ejs') %> 
