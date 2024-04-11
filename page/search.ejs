@@ -38,7 +38,7 @@
 
             if(data.length)
             {
-                let newContent = `<p>搜尋沒有結果</p>`
+                let newContent = `<p>共有${data.length}個搜尋結果</p>`
                 data.forEach(result=>{
                     console.log(result)
                     newContent += `<a href="/post/${result._id}" target="_blank">${result.title}</a> (${result.views}次瀏覽)<br/><br/>`
